@@ -88,13 +88,13 @@ En la Actividad 3 se han implementado las siguientes mejoras:
 ## Resultados
 A continuación se muestran las capturas con el funcionamiento del ascensor y la respuesta ante posibles fallos:
 - Cambio de planta tras seleccionar el 3 en el mando IR:
-![Planta3](images/planta3.png)
+![Planta3](imagenes/planta3.png)
 
 - LEDs encendidos tras la medición de unas condiciones ambientales:
-![LEDs_Ambientales](images/LEDs_ambientales.png)
+![LEDs_Ambientales](imagenes/LEDs_ambientales.png)
 
 - Errores de medida en los sensores:
-![ErrorDHT](images/error_dht.png)
+![ErrorDHT](imagenes/error_dht.png)
 
 ## Código Wokwi de la simulación
 [Proyecto Wokwi](https://wokwi.com/projects/465466016252439553)

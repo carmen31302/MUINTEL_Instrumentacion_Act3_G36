@@ -6,6 +6,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Servo.h>
 #include <IRremote.h>
+#include <EEPROM.h>
 
 // Definición de los pines de conexiones del Hardware
 #define PIN_DHT 2                     // Pin para el sensor DHT22
@@ -36,6 +37,9 @@ int plantaAnt = -1;
 
 bool actualizarPantalla = true;
 
+bool falloDHT = false;
+bool falloLDR = false;
+
 // Inicialización
 void setup() {
   Serial.begin(9600);                 // Puerto serie
@@ -47,10 +51,9 @@ void setup() {
   pinMode(DATA, OUTPUT);              // Pines del 74HC595 como salidas
   pinMode(CLOCK, OUTPUT);
   pinMode(LATCH, OUTPUT);
-  //digitalWrite(LATCH, LOW);
+
   actualizarLEDs(0, 0);               // Leds apagados al empezar
   ascensor.attach(PIN_SERVO);         // Iniciar servo como actuador
-  ascensor.write(0);                  // Planta 1 como inicial
 
   lcd.init();                         // Iniciar LCD
   lcd.backlight();
@@ -60,6 +63,13 @@ void setup() {
   lcd.print("Inicializando...");
   
   delay(2000);
+
+  plantaActual = EEPROM.read(0);              // Planta guardada
+  if(plantaActual < 1 || plantaActual > 5){
+    plantaActual = 1;
+  }
+  moverAscensor(plantaActual, map(plantaActual,1,5,0,180));
+
   lcd.clear();
 }
 
@@ -68,13 +78,22 @@ void loop() {
   // Lectura de sensores de temperatura y humedad y de iluminación
   float t = dht.readTemperature();
   float h = dht.readHumidity();
-
   int luz = analogRead(PIN_LDR);
-  if (isnan(h) || isnan(t)) {
-    Serial.println("Error: Fallo de lectura en sensor DHT22");
+
+  falloDHT = false;
+  falloLDR = false;
+  if (isnan(t) || isnan(h)) {
+    falloDHT = true;
     t = tempAnt;
     h = humAnt;
-  } 
+    Serial.println("ERROR DHT22");
+  }
+
+  if (luz < 0 || luz > 1023) {
+    falloLDR = true;
+    luz = luzAnt;
+    Serial.println("ERROR LDR");
+  }
 
   // Lógica tras la lectura
   byte salidaHT = calcularHT(t, h);
@@ -92,10 +111,6 @@ void loop() {
     estadoLuz = "ALTA";
   }
 
-  // Detección de presencia con  el ultrasonidos si la distancia está entre 0 y 100
-  float distancia = ultrasonico();
-  bool usuarioDetectado = (distancia > 0 && distancia < 100);
-
   // Funcionamiento de los infrarrojos para indicar la planta
   if (IrReceiver.decode()) {
     int plantaMarcada = IrReceiver.decodedIRData.command;
@@ -105,26 +120,58 @@ void loop() {
       case 122: moverAscensor(3, 90); break;  // Planta 3
       case 16: moverAscensor(4, 135); break;  // Planta 4
       case 56: moverAscensor(5, 180); break;  // Planta 5
+      case 90:                                // Subir temperatura
+        tempDeseada++;
+        Serial.print("Temp SP: ");
+        Serial.println(tempDeseada);
+        actualizarPantalla = true;
+        break;
+      case 82:                                // Bajar temperatura
+        tempDeseada--;
+        Serial.print("Temp SP: ");
+        Serial.println(tempDeseada);
+        actualizarPantalla = true;
+        break;
+      case 176:                              // Subir humedad
+        humDeseada += 5;
+        Serial.print("Hum SP: ");
+        Serial.println(humDeseada);
+        actualizarPantalla = true;
+        break;
+      case 224:                              // Bajar humedad
+        humDeseada -= 5;
+        Serial.print("Hum SP: ");
+        Serial.println(humDeseada);
+        actualizarPantalla = true;
+        break;
     }
     IrReceiver.resume();
   }
 
   // Actualizar el display LCD (evita parpadeos al sobreescribir)
-  if ( abs(t - tempAnt) > 0.3 || abs(h- humAnt) > 1 || abs(luz - luzAnt) > 10 ||
-    plantaActual != plantaAnt || actualizarPantalla) {
-
+  if ( abs(t - tempAnt) > 0.3 || abs(h- humAnt) > 1 || abs(luz - luzAnt) > 10 || plantaActual != plantaAnt || actualizarPantalla) {
+    lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Planta "); lcd.print(plantaActual);
-    lcd.setCursor(0,1);
+    lcd.print("P: "); lcd.print(plantaActual);
     lcd.print("T:"); lcd.print(t,1); lcd.print((char)223); lcd.print("C ");
-    lcd.print("H:"); lcd.print(h,1); lcd.print("%");
-    lcd.print("   ");
+    lcd.setCursor(0,1);
+    lcd.print("H:"); lcd.print(h,0); lcd.print("%");
 
-    Serial.println("Iluminacion: ");
-    Serial.println(estadoLuz);
+    if(falloDHT){
+      lcd.print(" DHT!");
+    }
+    else if(falloLDR){
+      lcd.print(" LDR!");
+    }
 
-    Serial.println("Presencia: ");
-    Serial.println(usuarioDetectado ? "SI" : "NO");
+    Serial.print("Planta: "); Serial.println(plantaActual);
+    Serial.print("Iluminacion: "); Serial.println(estadoLuz);
+    Serial.print("Temperatura: "); Serial.println(t);
+    Serial.print("Humedad: "); Serial.println(h);
+    Serial.println("Presencia: "); Serial.println(usuarioDetectado ? "SI" : "NO");
+    Serial.print("SP Temp: "); Serial.println(tempDeseada);
+    Serial.print("SP Hum: "); Serial.println(humDeseada);
+    Serial.println("--------------------");
 
     // Guardar valores anteriores
     tempAnt = t;
@@ -134,7 +181,7 @@ void loop() {
 
     actualizarPantalla =  false;
   }
-  delay(50);
+  delay(200);
 }
 
 // Calcular los bytes de salida para los registros de movimiento de los LEDs
@@ -173,7 +220,7 @@ void actualizarLEDs(byte salidaHT, byte salidaLuz) {
 void moverAscensor(int planta, int angulo) {
   ascensor.write(angulo);                         // Simular el movimiento con el ángulo del servo 
   plantaActual = planta;                          // Ya ha llegado a la planta
-
+  EEPROM.update(0, plantaActual);                 // Almacenar la planta
   actualizarPantalla = true;                      // Actualizar el display
   Serial.print("Ascensor en planta ");
   Serial.println(plantaActual);
@@ -187,7 +234,7 @@ float ultrasonico() {
   delayMicroseconds(10);
   digitalWrite(PIN_TRIG, LOW);
 
-  long tiempo = pulseIn(PIN_ECHO, HIGH, 3000);    // Tiempo en alto de ECHO incluyendo timeout
+  long tiempo = pulseIn(PIN_ECHO, HIGH, 30000);    // Tiempo en alto de ECHO incluyendo timeout
   float distancia = tiempo * 0.034 / 2;           // Calcular: V_sonido = D / T
 
   return distancia;

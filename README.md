@@ -8,7 +8,8 @@ El sistema integra:
 - Detección de presencia
 - Visualización mediante LCD
 - Simulación del movimiento del ascensor mediante servomotor
-- Autodiagnóstico de sensores-Arquitectura del sistema
+- Autodiagnóstico de sensores
+- Arquitectura del sistema
 
  ## Arquitectura del sistema
  La arquitectura del sistema se incluye en el archivo "diagram.json" de Wokwi y se muestra en la siguiente imagen.
@@ -32,7 +33,8 @@ A continuación se listan los diferentes componentes utilizados en el sistema.
 
 ## Funcionamiento
 ### Control del ascensor
-El usuario selecciona una planta mediante un mando infrarrojo, el receptor recibe ese código y le transmite al servomotor la posición en la que debe colocarse, que simulará las diferentes plantas en las que se puede encontrar el ascensor. El botón del mando y su equivalencia en
+El usuario selecciona una planta mediante un mando infrarrojo, el receptor recibe ese código y le transmite al servomotor la posición en la que debe colocarse, que simulará las diferentes plantas en las que se puede encontrar el ascensor. <br>
+El botón del mando y su equivalencia en posición del servomotor:
 
 | Botón | Planta   | Posición Servo |
 | ----- | -------- | -------------- |
@@ -45,17 +47,17 @@ El usuario selecciona una planta mediante un mando infrarrojo, el receptor recib
 ### Monitorización ambiental
 El sensor DHT22 mide temperatura y humedad y el sistema compara las medidas con los límites establecidos:
 - Temperatura: 25 ºC
-- Humedad: 80 %
+- Humedad: 80 % <br><br>
 Para temperaturas y humedad inferiores o superiores a estos valores (teniendo en cuenta un margen), se encenderán los 4 LEDs que simulan una climatización/humidificación del ascensor; es decir, la respuesta que tendrían que dar los actuadores del sistema según los valores medidos por el sensor DHT22.
 
 ### Control de iluminación
-La iluminación se regula mediante un conjunto de LEDs gestionado por registros 74HC595; estos se encienden en mayor cantidad cuanta menos luz ambiental se detecte a través de un sensor LDR.
+La iluminación se regula mediante un conjunto de LEDs gestionado por registros 74HC595; estos se encienden en mayor cantidad cuanta mayor luz ambiental se detecte a través de un sensor LDR.
 
 ### Detección de presencia
 Se utiliza un sensor ultrasónico que calcula la distancia a la que hay una presencia a partir del tiempo que tarda en rebotar un sonido.
 
 ### Interfaz IHM
-EL funcionamiento descrito anteriormente se mostrará de manera amigable al usuario a través de un sensor LCD, que mostrará en pantalla las condiciones ambientales medidas y la planta actual en la que se encuentra el ascensor.
+EL funcionamiento descrito anteriormente se mostrará de manera amigable al usuario a través de un sensor LCD, que mostrará en pantalla las condiciones ambientales medidas y la planta actual en la que se encuentra el ascensor.<br>
 Además, se sacará la información recogida por los sensores a través del puerto serie del Arduino.
 
 ## Diagrama de flujo
@@ -87,7 +89,7 @@ En la Actividad 3 se han implementado las siguientes mejoras:
 
 ## Resultados
 A continuación se muestran las capturas con el funcionamiento del ascensor y la respuesta ante posibles fallos:
-- **Cambio de planta tras seleccionar el 3 en el mando IR:** <br>
+- **Cambio de planta tras seleccionar el 3 en el mando IR:** <br><br>
   El sistema permite controlar la posición del ascensor mediante un mando a distancia por infrarrojos. Al pulsar un número en el mando, el Arduino decodifica la señal y envía la orden al servomotor para que gire al ángulo correspondiente a esa planta. Simultáneamente, la pantalla LCD se actualiza para mostrar la nueva ubicación. En las siguientes imágenes se aprecia el estado inicial en la Planta 1 (ángulo 0º) y el cambio a la Planta 3 (ángulo 90º) tras pulsar el botón "3".
     
     <p align="center">
@@ -95,13 +97,13 @@ A continuación se muestran las capturas con el funcionamiento del ascensor y la
       <img src="imagenes/planta3.png" width="48%" alt="Planta 3" />
     </p>
 
-- **LEDs encendidos tras la medición de unas condiciones ambientales:** <br>
+- **LEDs encendidos tras la medición de unas condiciones ambientales:** <br><br>
 El sistema reacciona dinámicamente a las variaciones del entorno detectadas por los sensores. En la siguiente captura se puede observar la respuesta de los actuadores ante una configuración manual extrema: <br>
     * **Climatización y Humedad (LEDs izquierdo):** Al modificar el sensor DHT22, la temperatura asciende a **40.3 °C**, superando el *setpoint* (25 °C + zona muerta), lo que activa el actuador de **refrigeración** (LED azul). Simultáneamente, la humedad desciende a **55.5 %**, cayendo por debajo del *setpoint* (80 % - zona muerta), por lo que el sistema activa el actuador para **humidificar** (LED celeste). <br>
     * **Iluminación (LEDs amarillos):** El sensor LDR ha detectado un nivel de luz ambiental muy bajo (10 lux). Como respuesta, el sistema compensa la oscuridad encendiendo los LEDs amarillos gestionados por el registro de desplazamiento, proporcionando iluminación artificial al interior del ascensor de forma proporcional.
     
     <p align="center">
-      <img src="images/LEDs_ambientales.png" width="80%" alt="Respuesta Ambiental LEDs" />
+      <img src="imagenes/LEDs_ambientales.png" width="80%" alt="Respuesta Ambiental LEDs" />
     </p>
 
 - **Errores de medida en los sensores:**

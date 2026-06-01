@@ -53,7 +53,7 @@ El sensor DHT22 mide temperatura y humedad y el sistema compara las medidas con 
 Para temperaturas y humedad inferiores o superiores a estos valores (teniendo en cuenta un margen), se encenderán los 4 LEDs que simulan una climatización/humidificación del ascensor; es decir, la respuesta que tendrían que dar los actuadores del sistema según los valores medidos por el sensor DHT22.
 
 ### Control de iluminación
-La iluminación se regula mediante un conjunto de LEDs gestionado por registros 74HC595; estos se encienden en mayor cantidad cuanta mayor luz ambiental se detecte a través de un sensor LDR.
+La iluminación se regula mediante un conjunto de LEDs gestionado por registros 74HC595; estos se encienden en mayor cantidad cuanta menos luz ambiental se detecte a través de un sensor LDR.
 
 ### Detección de presencia
 Se utiliza un sensor ultrasónico que calcula la distancia a la que hay una presencia a partir del tiempo que tarda en rebotar un sonido.

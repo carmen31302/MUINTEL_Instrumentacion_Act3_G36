@@ -95,8 +95,14 @@ A continuación se muestran las capturas con el funcionamiento del ascensor y la
       <img src="imagenes/planta3.png" width="48%" alt="Planta 3" />
     </p>
 
-- **LEDs encendidos tras la medición de unas condiciones ambientales:**
-![LEDs_Ambientales](imagenes/LEDs_ambientales.png)
+- **LEDs encendidos tras la medición de unas condiciones ambientales:** <br>
+El sistema reacciona dinámicamente a las variaciones del entorno detectadas por los sensores. En la siguiente captura se puede observar la respuesta de los actuadores ante una configuración manual extrema: <br>
+    * **Climatización y Humedad (LEDs izquierdo):** Al modificar el sensor DHT22, la temperatura asciende a **40.3 °C**, superando el *setpoint* (25 °C + zona muerta), lo que activa el actuador de **refrigeración** (LED azul). Simultáneamente, la humedad desciende a **55.5 %**, cayendo por debajo del *setpoint* (80 % - zona muerta), por lo que el sistema activa el actuador para **humidificar** (LED celeste). <br>
+    * **Iluminación (LEDs amarillos):** El sensor LDR ha detectado un nivel de luz ambiental muy bajo (10 lux). Como respuesta, el sistema compensa la oscuridad encendiendo los LEDs amarillos gestionados por el registro de desplazamiento, proporcionando iluminación artificial al interior del ascensor de forma proporcional.
+    
+    <p align="center">
+      <img src="images/LEDs_ambientales.png" width="80%" alt="Respuesta Ambiental LEDs" />
+    </p>
 
 - **Errores de medida en los sensores:**
 ![ErrorDHT](imagenes/error_dht.png)

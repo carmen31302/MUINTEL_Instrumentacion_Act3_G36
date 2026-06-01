@@ -111,6 +111,10 @@ void loop() {
     estadoLuz = "ALTA";
   }
 
+  // Detección de presencia con  el ultrasonidos si la distancia está entre 0 y 100
+  float distancia = ultrasonico();
+  bool usuarioDetectado = (distancia > 0 && distancia < 100);
+
   // Funcionamiento de los infrarrojos para indicar la planta
   if (IrReceiver.decode()) {
     int plantaMarcada = IrReceiver.decodedIRData.command;
@@ -120,25 +124,25 @@ void loop() {
       case 122: moverAscensor(3, 90); break;  // Planta 3
       case 16: moverAscensor(4, 135); break;  // Planta 4
       case 56: moverAscensor(5, 180); break;  // Planta 5
-      case 90:                                // Subir temperatura
+      case 162:                               // Subir temperatura (+)
         tempDeseada++;
         Serial.print("Temp SP: ");
         Serial.println(tempDeseada);
         actualizarPantalla = true;
         break;
-      case 82:                                // Bajar temperatura
+      case 226:                                // Bajar temperatura (-)
         tempDeseada--;
         Serial.print("Temp SP: ");
         Serial.println(tempDeseada);
         actualizarPantalla = true;
         break;
-      case 176:                              // Subir humedad
+      case 194:                                // Subir humedad (>>)
         humDeseada += 5;
         Serial.print("Hum SP: ");
         Serial.println(humDeseada);
         actualizarPantalla = true;
         break;
-      case 224:                              // Bajar humedad
+      case 2:                                 // Bajar humedad (<<)
         humDeseada -= 5;
         Serial.print("Hum SP: ");
         Serial.println(humDeseada);
@@ -153,9 +157,10 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("P: "); lcd.print(plantaActual);
-    lcd.print("T:"); lcd.print(t,1); lcd.print((char)223); lcd.print("C ");
+    lcd.print(" T:"); lcd.print(t,1); lcd.print((char)223); lcd.print("C ");
     lcd.setCursor(0,1);
     lcd.print("H:"); lcd.print(h,0); lcd.print("%");
+    lcd.print(" L:"); lcd.print(estadoLuz);
 
     if(falloDHT){
       lcd.print(" DHT!");
@@ -199,7 +204,7 @@ byte calcularLuz(int luz) {
   // Iluminación artificial: a mayor luz ambiente, menos LEDs encendidos. 8 niveles
   byte estadoL = 0;   
                            
-  int nivel = map(luz, 0, 1023, 8, 0);                // Convertir luz a número de LEDs
+  int nivel = map(luz, 0, 1023, 0, 8);                // Convertir luz a número de LEDs
   nivel = constrain(nivel, 0, 8);                     // Limitar el valor de núm. de LEDs
   for (int i = 0; i < nivel; i++) {
     estadoL |= (1 << i);                              // Calcular LEDs encendidos necesarios

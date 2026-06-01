@@ -108,8 +108,13 @@ El sistema reacciona dinámicamente a las variaciones del entorno detectadas por
       <img src="imagenes/LEDs_ambientales.png" width="80%" alt="Respuesta Ambiental LEDs" />
     </p>
 
-- **Errores de medida en los sensores:**
-![ErrorDHT](imagenes/error_dht.png)
+- **Autodiagnóstico y detección de fallos:**
+    Para probar la funcionalidad de autodiagnóstico del sistema, se ha simulado un fallo de hardware desconectando deliberadamente el cable de datos del sensor DHT22 (simulando un circuito abierto). Al no poder establecer comunicación, el algoritmo detecta esta anomalía.<br>
+  Como mecanismo de seguridad, el sistema retiene los últimos valores ambientales válidos registrados (25.0 °C y 80 %) para evitar un comportamiento errático de los actuadores de clima. De forma simultánea, alerta al operario mostrando el mensaje de advertencia "DHT!" en la pantalla LCD y registrando "ERROR DHT22" en el monitor serie, cumpliendo así con las capacidades de detección de errores propias de la instrumentación avanzada.
+    
+    <p align="center">
+      <img src="imagenes/error_dht.png" width="80%" alt="Error DHT22" />
+    </p>
 
 ## Código Wokwi de la simulación
 [Proyecto Wokwi](https://wokwi.com/projects/465466016252439553)

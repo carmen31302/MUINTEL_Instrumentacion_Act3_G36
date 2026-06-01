@@ -13,8 +13,10 @@ El sistema integra:
 
  ## Arquitectura del sistema
  La arquitectura del sistema se incluye en el archivo "diagram.json" de Wokwi y se muestra en la siguiente imagen.
- 
- ![Arquitectura](imagenes/arquitectura.png)
+
+   <p align="center">
+     <img src="imagenes/arquitectura.png" width="80%" alt="Respuesta Ambiental LEDs" />
+   </p>
  
 ## BOM
 A continuación se listan los diferentes componentes utilizados en el sistema.

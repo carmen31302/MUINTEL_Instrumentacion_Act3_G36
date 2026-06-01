@@ -121,3 +121,14 @@ El sistema reacciona dinámicamente a las variaciones del entorno detectadas por
 
 ## Vídeo demostración
 [Vídeo demostración](videos/MUINTEL_Instrumentacion_Act3_G36.mp4)
+
+## Autores
+
+- Javier Moreno Revenga
+- María Ocete Ruiz
+- Ana Muñóz Nicolás
+- Carmen Ortega Hernández
+- Daniel Paniagua Urquijo
+
+Asignatura: **Equipos e Instrumentación Electrónica**  
+Curso 2025/2026

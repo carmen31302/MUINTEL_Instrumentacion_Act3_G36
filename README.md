@@ -51,6 +51,9 @@ El sensor DHT22 mide temperatura y humedad y el sistema compara las medidas con 
 - Temperatura: 25 ºC
 - Humedad: 80 % <br><br>
 Para temperaturas y humedad inferiores o superiores a estos valores (teniendo en cuenta un margen), se encenderán los 4 LEDs que simulan una climatización/humidificación del ascensor; es decir, la respuesta que tendrían que dar los actuadores del sistema según los valores medidos por el sensor DHT22.
+La temperatura y humedad límite se pueden modificar a través de los botones del mando IR:
+- Pulsando '+' se subirá 1ºC la temperatura deseada, mientras que pulsando '-' se bajará 1ºC.
+- Pulsando '>>' se subirá un 5% la humedad deseada, mientras que pulsando '<<' se bajará un 5%.
 
 ### Control de iluminación
 La iluminación se regula mediante un conjunto de LEDs gestionado por registros 74HC595; estos se encienden en mayor cantidad cuanta menos luz ambiental se detecte a través de un sensor LDR.

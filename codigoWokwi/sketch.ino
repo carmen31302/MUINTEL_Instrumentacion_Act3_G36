@@ -124,25 +124,25 @@ void loop() {
       case 122: moverAscensor(3, 90); break;  // Planta 3
       case 16: moverAscensor(4, 135); break;  // Planta 4
       case 56: moverAscensor(5, 180); break;  // Planta 5
-      case 162:                               // Subir temperatura (+)
+      case 2:                                 // Subir temperatura (+)
         tempDeseada++;
         Serial.print("Temp SP: ");
         Serial.println(tempDeseada);
         actualizarPantalla = true;
         break;
-      case 226:                                // Bajar temperatura (-)
+      case 152:                                // Bajar temperatura (-)
         tempDeseada--;
         Serial.print("Temp SP: ");
         Serial.println(tempDeseada);
         actualizarPantalla = true;
         break;
-      case 194:                                // Subir humedad (>>)
+      case 144:                                // Subir humedad (>>)
         humDeseada += 5;
         Serial.print("Hum SP: ");
         Serial.println(humDeseada);
         actualizarPantalla = true;
         break;
-      case 2:                                 // Bajar humedad (<<)
+      case 224:                                 // Bajar humedad (<<)
         humDeseada -= 5;
         Serial.print("Hum SP: ");
         Serial.println(humDeseada);

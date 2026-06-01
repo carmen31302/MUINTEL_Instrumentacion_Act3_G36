@@ -90,9 +90,9 @@ A continuación se muestran las capturas con el funcionamiento del ascensor y la
 - **Cambio de planta tras seleccionar el 3 en el mando IR:** <br>
   El sistema permite controlar la posición del ascensor mediante un mando a distancia por infrarrojos. Al pulsar un número en el mando, el Arduino decodifica la señal y envía la orden al servomotor para que gire al ángulo correspondiente a esa planta. Simultáneamente, la pantalla LCD se actualiza para mostrar la nueva ubicación. En las siguientes imágenes se aprecia el estado inicial en la Planta 1 (ángulo 0º) y el cambio a la Planta 3 (ángulo 90º) tras pulsar el botón "3".
     
-    ![Planta 1](images/planta1.png)
+    ![Planta 1](imagenes/planta1.png)
     
-    ![Planta 3](images/planta3.png)
+    ![Planta 3](imagenes/planta3.png)
 
 - **LEDs encendidos tras la medición de unas condiciones ambientales:**
 ![LEDs_Ambientales](imagenes/LEDs_ambientales.png)
